@@ -10,36 +10,41 @@ function App() {
   const [isEditProfilePopupOpen, setEditProfilePopup] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopup] = React.useState(false);
 
-  const handleEscClose = (event, setter) => {
-    if (event.key === 'Escape') {
-      closePopup(setter);
-    }
-  };
+  useEffect(() => {
+    const callback = isEditAvatarPopupOpen
+      ? setEditAvatarPopup
+      : isEditProfilePopupOpen
+      ? setEditProfilePopup
+      : isAddPlacePopupOpen
+      ? setAddPlacePopup
+      : null;
 
-  let wrapHandleEscClose;
+    if (callback === null) return;
 
-  const addEscListener = setter => {
-    wrapHandleEscClose = event => {
-      handleEscClose(event, setter);
+    const handleEscClose = event => {
+      if (event.key === 'Escape') {
+        closePopup(callback);
+      }
     };
-    document.addEventListener('keydown', wrapHandleEscClose);
-  };
+
+    document.addEventListener('keydown', handleEscClose);
+
+    return function removeListener() {
+      document.removeEventListener('keydown', handleEscClose);
+    };
+  }, [isEditAvatarPopupOpen, isEditProfilePopupOpen, isAddPlacePopupOpen]);
 
   const handleEditAvatarClick = () => {
-    addEscListener(setEditAvatarPopup);
     setEditAvatarPopup(true);
   };
   const handleEditProfileClick = () => {
-    addEscListener(setEditProfilePopup);
     setEditProfilePopup(true);
   };
   const handleAddPlaceClick = () => {
-    addEscListener(setAddPlacePopup);
     setAddPlacePopup(true);
   };
 
   const closePopup = setter => {
-    document.removeEventListener('keydown', wrapHandleEscClose);
     setter(false);
   };
 
