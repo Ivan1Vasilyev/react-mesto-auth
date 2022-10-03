@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../utils/Api.js';
+import Card from './Card.js';
 
 function Main(props) {
   const [userName, setUserName] = React.useState('');
@@ -26,7 +27,7 @@ function Main(props) {
         setCards([...response]);
       })
       .catch(console.log);
-  }, [cards]);
+  }, []);
 
   return (
     <main className="content">
@@ -44,15 +45,7 @@ function Main(props) {
       <section className="elements">
         <ul className="elements__container">
           {cards.map(card => (
-            <li className="card" key={card._id}>
-              <img className="card__image" src={card.link} alt={card.name} />
-              <h2 className="card__caption">{card.name}</h2>
-              <div className="card__like-container">
-                <button className="card__like" type="button" aria-label="Лайк"></button>
-                <p className="card__likes-counter">{card.likes.length}</p>
-              </div>
-              <button className="card__delete" type="button" aria-label="Удалить карточку"></button>
-            </li>
+            <Card key={card._id} card={card} />
           ))}
         </ul>
       </section>
