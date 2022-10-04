@@ -14,21 +14,12 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState(null);
 
   useEffect(() => {
-    const callback = isEditAvatarPopupOpen
-      ? setEditAvatarPopup
-      : isEditProfilePopupOpen
-      ? setEditProfilePopup
-      : isAddPlacePopupOpen
-      ? setAddPlacePopup
-      : isImagePopupOpen
-      ? setImagePopup
-      : null;
-
-    if (callback === null) return;
+    const isAllPopupsClosed = !(isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isImagePopupOpen);
+    if (isAllPopupsClosed) return;
 
     const handleEscClose = event => {
       if (event.key === 'Escape') {
-        closeAllPopups(callback);
+        closeAllPopups();
       }
     };
 
@@ -37,14 +28,17 @@ function App() {
     return () => document.removeEventListener('keydown', handleEscClose);
   }, [isEditAvatarPopupOpen, isEditProfilePopupOpen, isAddPlacePopupOpen, isImagePopupOpen]);
 
-  const closeAllPopups = popupSetter => {
+  const closeAllPopups = () => {
     setSelectedCard(null);
-    popupSetter(false);
+    setEditAvatarPopup(false);
+    setEditProfilePopup(false);
+    setAddPlacePopup(false);
+    setImagePopup(false);
   };
 
-  const handleClickClosePopup = (event, popupSetter) => {
+  const handleClickClosePopup = event => {
     if (event.target.classList.contains('popup__close-icon') || event.target.classList.contains('popup')) {
-      closeAllPopups(popupSetter);
+      closeAllPopups();
     }
   };
 
@@ -81,7 +75,7 @@ function App() {
         name="profile"
         title="Редактировать профиль"
         isOpen={isEditProfilePopupOpen}
-        onClose={event => handleClickClosePopup(event, setEditProfilePopup)}
+        onClose={handleClickClosePopup}
         children={
           <>
             <input className="form__input" type="text" name="name" minLength="2" maxLength="40" required />
@@ -95,7 +89,7 @@ function App() {
         name="add-image"
         title="Новое место"
         isOpen={isAddPlacePopupOpen}
-        onClose={event => handleClickClosePopup(event, setAddPlacePopup)}
+        onClose={handleClickClosePopup}
         buttonText="Создать"
         children={
           <>
@@ -110,7 +104,7 @@ function App() {
         name="edit-avatar"
         title="Обновить аватар"
         isOpen={isEditAvatarPopupOpen}
-        onClose={event => handleClickClosePopup(event, setEditAvatarPopup)}
+        onClose={handleClickClosePopup}
         type="popup__form-container_type_edit-avatar"
         children={
           <>
@@ -119,7 +113,7 @@ function App() {
           </>
         }
       />
-      <ImagePopup card={selectedCard} isOpen={isImagePopupOpen} onClose={event => handleClickClosePopup(event, setImagePopup)} />
+      <ImagePopup card={selectedCard} isOpen={isImagePopupOpen} onClose={handleClickClosePopup} />
 
       <div className="popup popup_type_delete-card">
         <div className="popup__form-container popup__form-container_type_delete-card">

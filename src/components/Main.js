@@ -15,7 +15,6 @@ function Main(props) {
         setUserName(response.name);
         setUserDescription(response.about);
         setUserAvatar(response.avatar);
-        return response;
       })
       .catch(console.log);
   }, []);
