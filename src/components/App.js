@@ -71,50 +71,30 @@ function App() {
         />
         <Footer />
       </div>
-      <PopupWithForm
-        name="profile"
-        title="Редактировать профиль"
-        isOpen={isEditProfilePopupOpen}
-        onClose={handleClickClosePopup}
-        children={
-          <>
-            <input className="form__input" type="text" name="name" minLength="2" maxLength="40" required />
-            <span className="form__input-error form__input-error_place_name"></span>
-            <input className="form__input" type="text" name="about" minLength="2" maxLength="200" required />
-            <span className="form__input-error form__input-error_place_about"></span>
-          </>
-        }
-      />
-      <PopupWithForm
-        name="add-image"
-        title="Новое место"
-        isOpen={isAddPlacePopupOpen}
-        onClose={handleClickClosePopup}
-        buttonText="Создать"
-        children={
-          <>
-            <input className="form__input" type="text" placeholder="Название" name="name" minLength="2" maxLength="30" required />
-            <span className="form__input-error form__input-error_place_name"></span>
-            <input className="form__input" type="url" placeholder="Ссылка на картинку" name="link" required />
-            <span className="form__input-error form__input-error_place_link"></span>
-          </>
-        }
-      />
+      <PopupWithForm name="profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={handleClickClosePopup}>
+        <input className="form__input" type="text" name="name" minLength="2" maxLength="40" required />
+        <span className="form__input-error form__input-error_place_name"></span>
+        <input className="form__input" type="text" name="about" minLength="2" maxLength="200" required />
+        <span className="form__input-error form__input-error_place_about"></span>
+      </PopupWithForm>
+      <PopupWithForm name="add-image" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={handleClickClosePopup} buttonText="Создать">
+        <input className="form__input" type="text" placeholder="Название" name="name" minLength="2" maxLength="30" required />
+        <span className="form__input-error form__input-error_place_name"></span>
+        <input className="form__input" type="url" placeholder="Ссылка на картинку" name="link" required />
+        <span className="form__input-error form__input-error_place_link"></span>
+      </PopupWithForm>
       <PopupWithForm
         name="edit-avatar"
         title="Обновить аватар"
         isOpen={isEditAvatarPopupOpen}
         onClose={handleClickClosePopup}
         type="popup__form-container_type_edit-avatar"
-        children={
-          <>
-            <input className="form__input" type="url" placeholder="Ссылка на новый аватар" name="avatar" required />
-            <span className="form__input-error form__input-error_place_avatar"></span>
-          </>
-        }
-      />
-      <ImagePopup card={selectedCard} isOpen={isImagePopupOpen} onClose={handleClickClosePopup} />
+      >
+        <input className="form__input" type="url" placeholder="Ссылка на новый аватар" name="avatar" required />
+        <span className="form__input-error form__input-error_place_avatar"></span>
+      </PopupWithForm>
 
+      <ImagePopup card={selectedCard} isOpen={isImagePopupOpen} onClose={handleClickClosePopup} />
       <div className="popup popup_type_delete-card">
         <div className="popup__form-container popup__form-container_type_delete-card">
           <form className="form" name="delete-card" noValidate>

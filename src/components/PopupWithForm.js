@@ -6,7 +6,7 @@ function PopupWithForm(props) {
           <h2 className="form__title">{props.title}</h2>
           {props.children}
           <button className="form__submit-button form__submit-button_disabled" type="submit" disabled>
-            {props.buttonText ? props.buttonText : 'Сохранить'}
+            {props.buttonText || 'Сохранить'}
           </button>
         </form>
         <button className="popup__close-icon" type="button" aria-label="Закрыть"></button>
