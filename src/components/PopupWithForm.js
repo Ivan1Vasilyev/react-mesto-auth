@@ -1,18 +1,15 @@
-function PopupWithForm(props) {
-  return (
-    <div className={`popup popup_type_${props.name} ${props.isOpen && 'popup_opened'}`} onClick={props.onClose}>
-      <div className={`popup__form-container ${props.type && props.type}`}>
-        <form className="form" name={props.name} noValidate>
-          <h2 className="form__title">{props.title}</h2>
-          {props.children}
-          <button className="form__submit-button form__submit-button_disabled" type="submit" disabled>
-            {props.buttonText || 'Сохранить'}
-          </button>
-        </form>
-        <button className="popup__close-icon" type="button" aria-label="Закрыть"></button>
-      </div>
-    </div>
-  );
-}
+import Popup from './Popup';
+
+const PopupWithForm = props => (
+  <Popup name={props.name} onClose={props.onClose} type={props.type} isOpen={props.isOpen}>
+    <form className="form" name={props.name} noValidate>
+      <h2 className={`form__title ${props.titleClassType && props.titleClassType}`}>{props.title}</h2>
+      {props.children}
+      <button className={`form__submit-button ${props.enabled ?? 'form__submit-button_disabled'}`} type="submit" disabled>
+        {props.buttonText || 'Сохранить'}
+      </button>
+    </form>
+  </Popup>
+);
 
 export default PopupWithForm;

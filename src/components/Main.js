@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { api } from '../utils/Api.js';
 import Card from './Card.js';
 
-function Main(props) {
+const Main = props => {
   const [userName, setUserName] = React.useState('');
   const [userDescription, setUserDescription] = React.useState('');
   const [userAvatar, setUserAvatar] = React.useState('');
@@ -23,7 +23,7 @@ function Main(props) {
     api
       .getDefaultCards()
       .then(response => {
-        setCards([...response]);
+        setCards(cards.concat(response));
       })
       .catch(console.log);
   }, []);
@@ -44,12 +44,12 @@ function Main(props) {
       <section className="elements">
         <ul className="elements__container">
           {cards.map(card => (
-            <Card onCardClick={props.onCardClick} key={card._id} card={card} />
+            <Card onCardClick={props.onCardClick} key={card._id} card={card} onBasketClick={props.onBasketClick} />
           ))}
         </ul>
       </section>
     </main>
   );
-}
+};
 
 export default Main;
