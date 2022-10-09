@@ -5,7 +5,7 @@ const PopupWithForm = props => (
     <form className="form" name={props.name} noValidate>
       <h2 className={`form__title ${props.titleClassType && props.titleClassType}`}>{props.title}</h2>
       {props.children}
-      <button className={`form__submit-button ${props.enabled ?? 'form__submit-button_disabled'}`} type="submit" disabled>
+      <button className={`form__submit-button ${props.enabled ? '' : 'form__submit-button_disabled'}`} type="submit" disabled={!props.enabled}>
         {props.buttonText || 'Сохранить'}
       </button>
     </form>

@@ -16,7 +16,7 @@ const Main = props => {
         setUserDescription(response.about);
         setUserAvatar(response.avatar);
       })
-      .catch(console.log);
+      .catch(err => console.log(`Ошибка загрузки данных пользователя! ${err}`));
   }, []);
 
   useState(() => {
@@ -25,7 +25,7 @@ const Main = props => {
       .then(response => {
         setCards(cards.concat(response));
       })
-      .catch(console.log);
+      .catch(err => console.log(`Ошибка загрузки коллекции карточек! ${err}`));
   }, []);
 
   return (
@@ -44,7 +44,7 @@ const Main = props => {
       <section className="elements">
         <ul className="elements__container">
           {cards.map(card => (
-            <Card onCardClick={props.onCardClick} key={card._id} card={card} onBasketClick={props.onBasketClick} />
+            <Card key={card._id} card={card} onCardClick={props.onCardClick} onBasketClick={props.onBasketClick} />
           ))}
         </ul>
       </section>
