@@ -10,22 +10,14 @@ const Main = props => {
 
   useState(() => {
     api
-      .getUserInfo()
-      .then(response => {
-        setUserName(response.name);
-        setUserDescription(response.about);
-        setUserAvatar(response.avatar);
+      .loadDefaultData()
+      .then(([userInfo, cardsCollection]) => {
+        setUserName(userInfo.name);
+        setUserDescription(userInfo.about);
+        setUserAvatar(userInfo.avatar);
+        setCards(cards.concat(cardsCollection));
       })
-      .catch(err => console.log(`Ошибка загрузки данных пользователя! ${err}`));
-  }, []);
-
-  useState(() => {
-    api
-      .getDefaultCards()
-      .then(response => {
-        setCards(cards.concat(response));
-      })
-      .catch(err => console.log(`Ошибка загрузки коллекции карточек! ${err}`));
+      .catch(err => console.log(`Ошибка загрузки данных! ${err}`));
   }, []);
 
   return (
