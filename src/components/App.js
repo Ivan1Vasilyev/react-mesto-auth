@@ -1,5 +1,5 @@
 import '../index.css';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -7,12 +7,12 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 
 const App = () => {
-  const [isEditAvatarPopupOpen, setEditAvatarPopup] = React.useState(false);
-  const [isEditProfilePopupOpen, setEditProfilePopup] = React.useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopup] = React.useState(false);
-  const [isImagePopupOpen, setImagePopup] = React.useState(false);
-  const [isConfirmPopupOpen, setConfirmPopup] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState(null);
+  const [isEditAvatarPopupOpen, setEditAvatarPopup] = useState(false);
+  const [isEditProfilePopupOpen, setEditProfilePopup] = useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopup] = useState(false);
+  const [isImagePopupOpen, setImagePopup] = useState(false);
+  const [isConfirmPopupOpen, setConfirmPopup] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const closeAllPopups = () => {
     setSelectedCard(null);
