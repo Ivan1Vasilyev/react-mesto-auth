@@ -43,7 +43,7 @@ const Main = props => {
               key={card._id}
               card={card}
               showFullImageClick={props.showFullImageClick}
-              deleteCardClick={props.deleteCardClick}
+              onCardDelete={props.onCardDelete}
               onCardLike={props.onCardLike}
             />
           ))}

@@ -9,7 +9,7 @@ class Api {
       ? response.json()
       : Promise.reject(`Статус: ${response.status}`);
 
-  getUserInfo = () =>
+  _getUserInfo = () =>
     fetch(`${this._address}users/me`, {
       method: 'GET',
       headers: this._headers,
@@ -20,11 +20,14 @@ class Api {
         return response;
       });
 
-  getDefaultCards = () =>
+  _getDefaultCards = () =>
     fetch(`${this._address}cards`, {
       method: 'GET',
       headers: this._headers,
     }).then(this._responseHandler);
+
+  loadDefaultData = () =>
+    Promise.all([this._getUserInfo(), this._getDefaultCards()]);
 
   editUserData = newData =>
     fetch(`${this._address}users/me`, {

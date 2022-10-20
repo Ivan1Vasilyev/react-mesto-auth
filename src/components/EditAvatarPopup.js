@@ -2,10 +2,8 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
-  const [urlAvatar, setUrlAvatar] = React.useState('');
   const inputRef = React.useRef();
 
-  const handleAvatarInputChange = () => setUrlAvatar(inputRef.current.value);
   const handleSubmit = e => {
     e.preventDefault();
     onUpdateAvatar({
@@ -27,8 +25,6 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
         type="url"
         placeholder="Ссылка на новый аватар"
         name="avatar"
-        value={urlAvatar}
-        onChange={handleAvatarInputChange}
         required
       />
       <span className="form__input-error form__input-error_place_avatar"></span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-const Card = ({ card, deleteCardClick, showFullImageClick, onCardLike }) => {
+const Card = ({ card, onCardDelete, showFullImageClick, onCardLike }) => {
   const currentUserId = React.useContext(CurrentUserContext)._id;
   const isOwner = card.owner._id === currentUserId;
   const isLiked = card.likes.some(i => i._id === currentUserId);
@@ -29,7 +29,7 @@ const Card = ({ card, deleteCardClick, showFullImageClick, onCardLike }) => {
           className="card__delete"
           type="button"
           aria-label="Удалить карточку"
-          onClick={deleteCardClick}
+          onClick={() => onCardDelete(card._id)}
         ></button>
       )}
     </li>

@@ -23,16 +23,12 @@ const App = () => {
 
   useEffect(() => {
     api
-      .getDefaultCards()
-      .then(setCards)
-      .catch(err => console.log(`Ошибка загрузки карточек! ${err}`));
-  }, []);
-
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then(setCurrentUser)
-      .catch(err => console.log(`Ошибка загрузки данных пользователя! ${err}`));
+      .loadDefaultData()
+      .then(([userInfo, defaultCards]) => {
+        setCurrentUser(userInfo);
+        setCards([...defaultCards]);
+      })
+      .catch(err => console.log(`Ошибка загрузки начальных данных! ${err}`));
   }, []);
 
   const closeAllPopups = () => {
@@ -59,9 +55,7 @@ const App = () => {
         setCurrentUser(response);
         closeAllPopups();
       })
-      .catch(err =>
-        console.log(`Ошибка обновления данных пользователя! ${err}`)
-      );
+      .catch(err => console.log(`Ошибка обновления данных пользователя! ${err}`));
   const handleAddPlace = placeData =>
     api
       .addCard(placeData)
@@ -77,18 +71,18 @@ const App = () => {
         setCurrentUser((currentUser.avatar = response));
         closeAllPopups();
       })
-      .catch(err =>
-        console.log(`Ошибка обновления аватара пользователя! ${err}`)
-      );
+      .catch(err => console.log(`Ошибка обновления аватара пользователя! ${err}`));
   const handleCardLike = card => {
     api
       .toggleLike(card)
-      .then(newCard =>
-        setCards(state => state.map(c => (c._id === card._id ? newCard : c)))
-      )
-      .catch(err =>
-        console.log(`Ошибка загрузки данных лайка карточки! ${err}`)
-      );
+      .then(newCard => setCards(state => state.map(c => (c._id === card._id ? newCard : c))))
+      .catch(err => console.log(`Ошибка загрузки данных лайка карточки! ${err}`));
+  };
+  const handleCardDelete = id => {
+    api
+      .deleteCard(id)
+      .then(() => setCards(cards => cards.filter(c => c._id !== id)))
+      .catch(err => console.log(`Ошибка удаления карточки! ${err}`));
   };
 
   return (
@@ -104,32 +98,15 @@ const App = () => {
             deleteCardClick={deleteCardClick}
             cards={cards}
             onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
           />
           <Footer />
         </div>
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-        <ImagePopup
-          card={selectedCard}
-          isOpen={isImagePopupOpen}
-          onClose={closeAllPopups}
-          name="full-image"
-          type="popup__image-container"
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlace}
-        />
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+        <ImagePopup card={selectedCard} isOpen={isImagePopupOpen} onClose={closeAllPopups} name="full-image" type="popup__image-container" />
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
         <PopupWithForm
           name="delete-card"
           title="Вы уверены?"
