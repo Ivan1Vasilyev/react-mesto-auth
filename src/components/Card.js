@@ -8,30 +8,13 @@ const Card = ({ card, onCardDelete, showFullImageClick, onCardLike }) => {
 
   return (
     <li className="card">
-      <img
-        className="card__image"
-        src={card.link}
-        alt={card.name}
-        onClick={() => showFullImageClick(card)}
-      />
+      <img className="card__image" src={card.link} alt={card.name} onClick={() => showFullImageClick(card)} />
       <h2 className="card__caption">{card.name}</h2>
       <div className="card__like-container">
-        <button
-          onClick={() => onCardLike(card)}
-          className={`card__like ${isLiked && 'card__like_active'}`}
-          type="button"
-          aria-label="Лайк"
-        ></button>
+        <button onClick={() => onCardLike(card)} className={`card__like ${isLiked && 'card__like_active'}`} type="button" aria-label="Лайк"></button>
         <p className="card__likes-counter">{card.likes.length}</p>
       </div>
-      {isOwner && (
-        <button
-          className="card__delete"
-          type="button"
-          aria-label="Удалить карточку"
-          onClick={() => onCardDelete(card._id)}
-        ></button>
-      )}
+      {isOwner && <button className="card__delete" type="button" aria-label="Удалить карточку" onClick={() => onCardDelete(card)}></button>}
     </li>
   );
 };

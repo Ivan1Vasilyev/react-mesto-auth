@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
   const [place, setPlace] = useState('');
   const [urlImage, setUrlImage] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setPlace('');
+      setUrlImage('');
+    }
+  }, [isOpen]);
 
   const handlePlaceInputChange = e => setPlace(e.target.value);
   const handleUrlImageInputChange = e => setUrlImage(e.target.value);
