@@ -1,6 +1,10 @@
 import PopupWithForm from './PopupWithForm';
 
 const DeleteCardPopup = ({ isOpen, onClose, onDeleteCard }) => {
+  const handleSubmit = e => {
+    e.preventDefault();
+    onDeleteCard();
+  };
   return (
     <PopupWithForm
       name="delete-card"
@@ -10,7 +14,8 @@ const DeleteCardPopup = ({ isOpen, onClose, onDeleteCard }) => {
       titleClassType="form__title_type_delete-card"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={onDeleteCard}
+      onSubmit={handleSubmit}
+      isButtonEnabled={true}
     />
   );
 };

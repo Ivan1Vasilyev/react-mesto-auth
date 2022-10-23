@@ -95,22 +95,20 @@ const App = () => {
       .then(newCard => setCards(state => state.map(c => (c._id === card._id ? newCard : c))))
       .catch(err => console.log(`Ошибка загрузки данных лайка карточки! ${err}`));
 
-  const handleDeleteCard = e => {
+  const handleDeleteCard = () =>
     uxWrap(
       setTextLoading,
-      () => {
-        e.preventDefault();
-        return api
+      () =>
+        api
           .deleteCard(selectedCard._id)
           .then(() => {
             setCards(cards => cards.filter(c => c._id !== selectedCard._id));
             closeAllPopups();
           })
-          .catch(err => console.log(`Ошибка удаления карточки! ${err}`));
-      },
+          .catch(err => console.log(`Ошибка удаления карточки! ${err}`)),
+
       'Удаление...'
     );
-  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

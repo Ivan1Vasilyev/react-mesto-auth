@@ -6,6 +6,8 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [validationMessage, setValidationMessage] = useState({});
+  const [isInputValid, setIsInputValid] = useState({});
 
   const handleNameInputChange = e => setName(e.target.value);
   const handleDescriptionInputChange = e => setDescription(e.target.value);
@@ -17,12 +19,19 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     });
   };
 
+  const inputValidate = e => {
+    setIsInputValid({ ...isInputValid, [e.target.name]: e.target.validity.valid });
+    setValidationMessage({ ...validationMessage, [e.target.name]: e.target.validationMessage });
+  };
+
   useEffect(() => {
-    if (currentUser) {
+    if (isOpen) {
       setName(currentUser.name);
       setDescription(currentUser.about);
+      setIsInputValid({ about: true, name: true });
+      setValidationMessage({ about: '', name: '' });
     }
-  }, [currentUser]);
+  }, [isOpen]);
 
   return (
     <PopupWithForm
@@ -33,19 +42,30 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
       onClose={onClose}
       onSubmit={handleSubmit}
     >
-      <input className="form__input" type="text" name="name" minLength="2" maxLength="40" value={name} onChange={handleNameInputChange} required />
-      <span className="form__input-error form__input-error_place_name"></span>
       <input
-        className="form__input"
+        className={`form__input ${!isInputValid.name && 'form__input_type_error'}`}
+        type="text"
+        name="name"
+        minLength="2"
+        maxLength="40"
+        value={name}
+        onChange={handleNameInputChange}
+        onInput={inputValidate}
+        required
+      />
+      <span className="form__input-error form__input-error_place_name">{validationMessage.name}</span>
+      <input
+        className={`form__input ${!isInputValid.about && 'form__input_type_error'}`}
         type="text"
         name="about"
         minLength="2"
         maxLength="200"
         value={description}
         onChange={handleDescriptionInputChange}
+        onInput={inputValidate}
         required
       />
-      <span className="form__input-error form__input-error_place_about"></span>
+      <span className="form__input-error form__input-error_place_about">{validationMessage.about}</span>
     </PopupWithForm>
   );
 };
