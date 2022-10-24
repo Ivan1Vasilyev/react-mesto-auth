@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
   const [place, setPlace] = useState('');
   const [urlImage, setUrlImage] = useState('');
-  const [validationMessage, setValidationMessage] = useState({});
-  const [isInputValid, setIsInputValid] = useState({});
+  const [inputsValidate, setInputsValidate] = useState({ name: {}, link: {} });
 
   useEffect(() => {
     if (isOpen) {
       setPlace('');
       setUrlImage('');
-      setIsInputValid({ link: true, name: true });
-      setValidationMessage({ link: '', name: '' });
+      setInputsValidate({ name: {}, link: {} });
     }
   }, [isOpen]);
 
-  const inputValidate = e => {
-    setIsInputValid({ ...isInputValid, [e.target.name]: e.target.validity.valid });
-    setValidationMessage({ ...validationMessage, [e.target.name]: e.target.validationMessage });
-  };
+  const getValidateData = validateData =>
+    setInputsValidate({
+      ...inputsValidate,
+      ...validateData,
+    });
 
   const handlePlaceInputChange = e => setPlace(e.target.value);
   const handleUrlImageInputChange = e => setUrlImage(e.target.value);
@@ -30,6 +29,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
       link: urlImage,
     });
   };
+
   return (
     <PopupWithForm
       name="add-image"
@@ -38,10 +38,11 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      validate={getValidateData}
       buttonText="Создать"
     >
       <input
-        className={`form__input ${!isInputValid.name && 'form__input_type_error'}`}
+        className={`form__input ${inputsValidate.name.isInvalid && 'form__input_type_error'}`}
         type="text"
         placeholder="Название"
         name="name"
@@ -49,21 +50,19 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         maxLength="30"
         value={place}
         onChange={handlePlaceInputChange}
-        onInput={inputValidate}
         required
       />
-      <span className="form__input-error form__input-error_place_name">{validationMessage.name}</span>
+      <span className="form__input-error form__input-error_place_name">{inputsValidate.name.message}</span>
       <input
-        className={`form__input ${!isInputValid.link && 'form__input_type_error'}`}
+        className={`form__input ${inputsValidate.link.isInvalid && 'form__input_type_error'}`}
         type="url"
         placeholder="Ссылка на картинку"
         name="link"
         value={urlImage}
         onChange={handleUrlImageInputChange}
-        onInput={inputValidate}
         required
       />
-      <span className="form__input-error form__input-error_place_link">{validationMessage.link}</span>
+      <span className="form__input-error form__input-error_place_link">{inputsValidate.link.message}</span>
     </PopupWithForm>
   );
 };

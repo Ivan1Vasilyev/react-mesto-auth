@@ -3,19 +3,18 @@ import PopupWithForm from './PopupWithForm';
 
 const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
   const inputRef = React.useRef();
-  const [validationMessage, setValidationMessage] = useState({});
-  const [isInputValid, setIsInputValid] = useState({});
+  const [inputsValidate, setInputsValidate] = useState({ avatar: {} });
 
   useEffect(() => {
     if (isOpen) inputRef.current.value = '';
-    setValidationMessage({ avatar: '' });
-    setIsInputValid({ avatar: true });
+    setInputsValidate({ avatar: {} });
   }, [isOpen]);
 
-  const inputValidate = e => {
-    setIsInputValid({ ...isInputValid, [e.target.name]: e.target.validity.valid });
-    setValidationMessage({ ...validationMessage, [e.target.name]: e.target.validationMessage });
-  };
+  const getValidateData = validateData =>
+    setInputsValidate({
+      ...inputsValidate,
+      ...validateData,
+    });
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -31,9 +30,17 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      validate={getValidateData}
     >
-      <input ref={inputRef} className="form__input" type="url" placeholder="Ссылка на новый аватар" name="avatar" onInput={inputValidate} required />
-      <span className="form__input-error form__input-error_place_avatar">{validationMessage.avatar}</span>
+      <input
+        ref={inputRef}
+        className={`form__input ${inputsValidate.avatar.isInvalid && 'form__input_type_error'}`}
+        type="url"
+        placeholder="Ссылка на новый аватар"
+        name="avatar"
+        required
+      />
+      <span className="form__input-error form__input-error_place_avatar">{inputsValidate.avatar.message}</span>
     </PopupWithForm>
   );
 };
