@@ -7,14 +7,9 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
 
   useEffect(() => {
     if (isOpen) inputRef.current.value = '';
-    setInputsValidate({ avatar: {} });
   }, [isOpen]);
 
-  const getValidateData = validateData =>
-    setInputsValidate({
-      ...inputsValidate,
-      ...validateData,
-    });
+  const getValidateData = validateData => setInputsValidate(validateData);
 
   const handleSubmit = e => {
     e.preventDefault();

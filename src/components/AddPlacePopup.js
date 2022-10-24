@@ -10,15 +10,10 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
     if (isOpen) {
       setPlace('');
       setUrlImage('');
-      setInputsValidate({ name: {}, link: {} });
     }
   }, [isOpen]);
 
-  const getValidateData = validateData =>
-    setInputsValidate({
-      ...inputsValidate,
-      ...validateData,
-    });
+  const getValidateData = validateData => setInputsValidate(validateData);
 
   const handlePlaceInputChange = e => setPlace(e.target.value);
   const handleUrlImageInputChange = e => setUrlImage(e.target.value);

@@ -18,17 +18,12 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     });
   };
 
-  const getValidateData = validateData =>
-    setInputsValidate({
-      ...inputsValidate,
-      ...validateData,
-    });
+  const getValidateData = validateData => setInputsValidate(validateData);
 
   useEffect(() => {
     if (isOpen) {
       setName(currentUser.name);
       setDescription(currentUser.about);
-      setInputsValidate({ name: {}, about: {} });
     }
   }, [isOpen]);
 

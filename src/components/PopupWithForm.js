@@ -4,14 +4,27 @@ import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 
 const PopupWithForm = props => {
   const textLoading = React.useContext(PopupOnLoadContext);
+
+  const resetValidation = inputs =>
+    inputs ? inputs.filter(item => item.type === 'input').reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {}) : {};
+
   const [isFormInvalid, setIsFormValid] = useState(false);
+  const [validator, setValidator] = useState(resetValidation(props.children));
 
   useEffect(() => {
-    if (props.isOpen) setIsFormValid(true);
+    if (props.isOpen) {
+      setIsFormValid(true);
+      setValidator(resetValidation(props.children));
+    }
   }, [props.isOpen]);
 
+  useEffect(() => {
+    if (props.validate) props?.validate(validator);
+  }, [validator]);
+
   const handlerValidForm = e => {
-    props.validate({
+    setValidator({
+      ...validator,
       [e.target.name]: {
         message: e.target.validationMessage,
         isInvalid: !e.target.validity.valid,
