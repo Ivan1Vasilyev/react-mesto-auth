@@ -11,6 +11,12 @@ const PopupWithForm = props => {
   }, [props.isOpen]);
 
   const handlerValidForm = e => {
+    props.validate({
+      [e.target.name]: {
+        message: e.target.validationMessage,
+        isInvalid: !e.target.validity.valid,
+      },
+    });
     setIsFormValid(!e.currentTarget.checkValidity());
   };
 
