@@ -5,24 +5,23 @@ import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 const PopupWithForm = props => {
   const textLoading = React.useContext(PopupOnLoadContext);
 
-  const resetValidation = inputs =>
-    inputs ? inputs.filter(item => item.type === 'input').reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {}) : {};
+  const resetValidator = () => props.children?.filter(item => item.type === 'input').reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {});
 
-  const [isFormInvalid, setIsFormValid] = useState(false);
-  const [validator, setValidator] = useState(resetValidation(props.children));
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const [validator, setValidator] = useState(resetValidator());
 
   useEffect(() => {
     if (props.isOpen) {
-      setIsFormValid(true);
-      setValidator(resetValidation(props.children));
+      setIsFormInvalid(true);
+      setValidator(resetValidator());
     }
   }, [props.isOpen]);
 
   useEffect(() => {
-    if (props.validate) props?.validate(validator);
+    if (props.validate) props.validate(validator);
   }, [validator]);
 
-  const handlerValidForm = e => {
+  const handlerFormValidation = e => {
     setValidator({
       ...validator,
       [e.target.name]: {
@@ -30,12 +29,12 @@ const PopupWithForm = props => {
         isInvalid: !e.target.validity.valid,
       },
     });
-    setIsFormValid(!e.currentTarget.checkValidity());
+    setIsFormInvalid(!e.currentTarget.checkValidity());
   };
 
   return (
     <Popup name={props.name} onClose={props.onClose} type={props.type} isOpen={props.isOpen}>
-      <form className="form" name={props.name} onSubmit={props.onSubmit} onChange={handlerValidForm} noValidate>
+      <form className="form" name={props.name} onSubmit={props.onSubmit} onChange={handlerFormValidation} noValidate>
         <h2 className={`form__title ${props.titleClassType && props.titleClassType}`}>{props.title}</h2>
         {props.children}
         <button
