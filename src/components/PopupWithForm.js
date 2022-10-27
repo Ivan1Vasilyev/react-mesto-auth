@@ -21,7 +21,7 @@ const PopupWithForm = props => {
     if (props.validate) props.validate(validator);
   }, [validator]);
 
-  const handlerFormValidation = e => {
+  const handleFormValidation = e => {
     setValidator({
       ...validator,
       [e.target.name]: {
@@ -33,9 +33,9 @@ const PopupWithForm = props => {
   };
 
   return (
-    <Popup name={props.name} onClose={props.onClose} type={props.type} isOpen={props.isOpen}>
-      <form className="form" name={props.name} onSubmit={props.onSubmit} onChange={handlerFormValidation} noValidate>
-        <h2 className={`form__title ${props.titleClassType && props.titleClassType}`}>{props.title}</h2>
+    <Popup onClose={props.onClose} type={props.type} isOpen={props.isOpen}>
+      <form className="form" name={props.name} onSubmit={props.onSubmit} onChange={handleFormValidation} noValidate>
+        <h2 className={`form__title ${props.titleClassType}`}>{props.title}</h2>
         {props.children}
         <button
           className={`form__submit-button ${props.isButtonEnabled ? '' : isFormInvalid && 'form__submit-button_disabled'}`}
