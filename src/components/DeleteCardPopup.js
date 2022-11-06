@@ -9,7 +9,7 @@ const DeleteCardPopup = ({ isOpen, onClose, onDeleteCard }) => {
     <PopupWithForm
       name="delete-card"
       title="Вы уверены?"
-      type="popup__form-container popup__form-container_type_delete-card"
+      type="popup__form-container_type_delete-card"
       buttonText="Да"
       titleClassType="form__title_type_delete-card"
       isOpen={isOpen}

@@ -22,18 +22,19 @@ const PopupWithForm = props => {
   }, [validator]);
 
   const handleFormValidation = e => {
+    const { name, validationMessage, validity } = e.target;
     setValidator({
       ...validator,
-      [e.target.name]: {
-        message: e.target.validationMessage,
-        isInvalid: !e.target.validity.valid,
+      [name]: {
+        message: validationMessage,
+        isInvalid: !validity.valid,
       },
     });
     setIsFormInvalid(!e.currentTarget.checkValidity());
   };
 
   return (
-    <Popup onClose={props.onClose} type={props.type} isOpen={props.isOpen}>
+    <Popup onClose={props.onClose} type={`popup__form-container ${props.type}`} isOpen={props.isOpen}>
       <form className="form" name={props.name} onSubmit={props.onSubmit} onChange={handleFormValidation} noValidate>
         <h2 className={`form__title ${props.titleClassType}`}>{props.title}</h2>
         {props.children}

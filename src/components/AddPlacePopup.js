@@ -2,34 +2,39 @@ import { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
-  const [place, setPlace] = useState('');
-  const [urlImage, setUrlImage] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    link: '',
+  });
   const [inputsValidate, setInputsValidate] = useState({ name: {}, link: {} });
 
   useEffect(() => {
     if (isOpen) {
-      setPlace('');
-      setUrlImage('');
+      setFormData({
+        name: '',
+        link: '',
+      });
     }
   }, [isOpen]);
 
   const getValidateData = validateData => setInputsValidate(validateData);
 
-  const handlePlaceInputChange = e => setPlace(e.target.value);
-  const handleUrlImageInputChange = e => setUrlImage(e.target.value);
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
   const handleSubmit = e => {
     e.preventDefault();
-    onAddPlace({
-      name: place,
-      link: urlImage,
-    });
+    onAddPlace(formData);
   };
 
   return (
     <PopupWithForm
       name="add-image"
       title="Новое место"
-      type="popup__form-container"
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
@@ -43,8 +48,8 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         name="name"
         minLength="2"
         maxLength="30"
-        value={place}
-        onChange={handlePlaceInputChange}
+        value={formData.name}
+        onChange={handleInputChange}
         required
       />
       <span className="form__input-error form__input-error_place_name">{inputsValidate.name.message}</span>
@@ -53,8 +58,8 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         type="url"
         placeholder="Ссылка на картинку"
         name="link"
-        value={urlImage}
-        onChange={handleUrlImageInputChange}
+        value={formData.link}
+        onChange={handleInputChange}
         required
       />
       <span className="form__input-error form__input-error_place_link">{inputsValidate.link.message}</span>

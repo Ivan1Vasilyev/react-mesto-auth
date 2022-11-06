@@ -21,7 +21,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
     <PopupWithForm
       name="edit-avatar"
       title="Обновить аватар"
-      type="popup__form-container popup__form-container_type_edit-avatar"
+      type="popup__form-container_type_edit-avatar"
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}

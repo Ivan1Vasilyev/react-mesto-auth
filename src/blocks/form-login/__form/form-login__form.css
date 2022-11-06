@@ -1,0 +1,7 @@
+.form-login__form {
+  min-width: 358px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 61px;
+}
