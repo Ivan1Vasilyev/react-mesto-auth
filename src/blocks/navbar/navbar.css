@@ -3,3 +3,10 @@
   line-height: 1.22;
   display: flex;
 }
+
+@media screen and (max-width: 440px) {
+  .navbar {
+    font-size: 14px;
+    line-height: 1.21;
+  }
+}

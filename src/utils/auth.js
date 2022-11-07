@@ -2,7 +2,7 @@ const baseUrl = 'https://auth.nomoreparties.co';
 
 const checkResponse = res => (res.ok ? res.json() : Promise.reject(`Статус ошибки: ${res.status}`));
 
-export const registrate = async userData => {
+export const register = async userData => {
   const response = await fetch(`${baseUrl}/signup`, {
     method: 'POST',
     headers: {
@@ -13,7 +13,7 @@ export const registrate = async userData => {
   return checkResponse(response);
 };
 
-export const authorize = async userData => {
+export const login = async userData => {
   const response = await fetch(`${baseUrl}/signin`, {
     method: 'POST',
     headers: {

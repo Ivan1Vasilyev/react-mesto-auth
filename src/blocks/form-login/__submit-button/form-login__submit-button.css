@@ -9,6 +9,15 @@
   transition: 0.4s;
 }
 
+@media screen and (max-width: 440px) {
+  .form-login__submit-button {
+    margin-top: 151px;
+    min-height: 46px;
+    font-size: 16px;
+    line-height: 1.19;
+  }
+}
+
 .form-login__submit-button:hover {
   cursor: pointer;
   opacity: 0.85;

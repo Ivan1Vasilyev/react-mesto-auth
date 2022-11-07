@@ -143,7 +143,7 @@ const App = () => {
 
   const onLogin = useCallback(async userData => {
     try {
-      const res = await userAuth.authorize(userData);
+      const res = await userAuth.login(userData);
       authenticate(res);
       checkToken();
     } catch (err) {
@@ -155,7 +155,7 @@ const App = () => {
 
   const onRegister = useCallback(async userData => {
     try {
-      const res = await userAuth.registrate(userData);
+      const res = await userAuth.register(userData);
       if (res) {
         setIsTooltipOnError(false);
         setIsInfoTooltipOpen(true);

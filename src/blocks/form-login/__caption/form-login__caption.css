@@ -3,3 +3,9 @@
   font-size: 14px;
   line-height: 1.21;
 }
+
+@media screen and (max-width: 440px) {
+  .form-login__caption {
+    margin-top: 21px;
+  }
+}

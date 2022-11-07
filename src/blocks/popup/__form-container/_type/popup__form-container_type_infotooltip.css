@@ -1,3 +1,9 @@
 .popup__form-container_type_infotooltip {
   align-items: center;
 }
+
+@media screen and (max-width: 590px) {
+  .popup__form-container_type_infotooltip {
+    min-height: 308px;
+  }
+}
