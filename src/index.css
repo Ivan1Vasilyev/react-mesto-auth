@@ -54,3 +54,7 @@
 @import url(./blocks/form-login/__submit-button/form-login__submit-button.css);
 @import url(./blocks/form-login/__caption/form-login__caption.css);
 @import url(./blocks/form-login/__link/form-login__link.css);
+@import url(./blocks/navbar/navbar.css);
+@import url(./blocks/navbar/__email/navbar__email.css);
+@import url(./blocks/navbar/__button/navbar__button.css);
+@import url(./blocks/navbar/__button/_logged/navbar__button_logged.css);

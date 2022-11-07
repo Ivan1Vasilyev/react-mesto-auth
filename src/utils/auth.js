@@ -1,6 +1,6 @@
 const baseUrl = 'https://auth.nomoreparties.co';
 
-const checkResponse = res => (res.ok ? res.json() : Promise.reject(`Статус: ${res.status}`));
+const checkResponse = res => (res.ok ? res.json() : Promise.reject(`Статус ошибки: ${res.status}`));
 
 export const registrate = async userData => {
   const response = await fetch(`${baseUrl}/signup`, {

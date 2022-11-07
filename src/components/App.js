@@ -1,6 +1,6 @@
 import '../index.css';
 import { useEffect, useState, useCallback } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import Page from './Page';
 import Header from './Header';
 import Main from './Main';
@@ -33,7 +33,8 @@ const App = () => {
   const [textLoading, setTextLoading] = useState('');
   const [email, setEmail] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [isTooltipOnError, setIsTooltipOnError] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     api
@@ -131,7 +132,6 @@ const App = () => {
               closeAllPopups();
             })
             .catch(err => console.log(`Ошибка удаления карточки! ${err}`)),
-
         'Удаление...'
       ),
     []
@@ -139,15 +139,15 @@ const App = () => {
 
   const authenticate = useCallback(data => {
     localStorage.setItem('jwt', data.token);
-    setLoggedIn(true);
   }, []);
 
   const onLogin = useCallback(async userData => {
     try {
       const res = await userAuth.authorize(userData);
       authenticate(res);
+      checkToken();
     } catch (err) {
-      setErrorMessage('Неверные имя пользователя или пароль!');
+      setIsTooltipOnError(true);
       setIsInfoTooltipOpen(true);
       console.log(err);
     }
@@ -157,12 +157,12 @@ const App = () => {
     try {
       const res = await userAuth.registrate(userData);
       if (res) {
-        authenticate(res);
+        setIsTooltipOnError(false);
         setIsInfoTooltipOpen(true);
+        history.push('/signin');
       }
-      console.log(res);
     } catch (err) {
-      setErrorMessage('Попробуйте ещё раз.');
+      setIsTooltipOnError(true);
       setIsInfoTooltipOpen(true);
       console.log(err);
     }
@@ -174,10 +174,12 @@ const App = () => {
       if (!jwt) throw new Error('Нет токена');
       const user = await userAuth.checkToken(jwt);
       if (user) {
-        setEmail(user.email);
+        setEmail(user.data.email);
         setLoggedIn(true);
       }
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   const onSignOut = useCallback(() => {
@@ -192,12 +194,12 @@ const App = () => {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Page>
-        <Header />
+        <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
         <Switch>
           <ProtectedRoute
-            path="/mesto-react"
-            loggedIn={loggedIn}
             component={Main}
+            loggedIn={loggedIn}
+            path="/mesto-react"
             onEditAvatar={openEditAvatarPopup}
             onEditProfile={openEditProfilePopup}
             onAddPlace={openAddPlacePopup}
@@ -216,7 +218,7 @@ const App = () => {
         </Switch>
         <Footer />
         <PopupOnLoadContext.Provider value={textLoading}>
-          <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} errorMessage={errorMessage} />
+          <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} onError={isTooltipOnError} />
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
           <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
           <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />

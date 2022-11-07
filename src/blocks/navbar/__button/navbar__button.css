@@ -1,0 +1,9 @@
+.navbar__button {
+  margin-top: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.navbar__button:hover {
+  opacity: 0.6;
+}
