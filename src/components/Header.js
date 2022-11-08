@@ -13,7 +13,7 @@ const Header = props => {
         <img className="header__logo" src={logo} alt="Логотип" />
         <Navbar {...props} />
         {props.loggedIn && (
-          <button className={`menu-trigger ${isMenuOpen && 'active'}`} onClick={toggler}>
+          <button className={`header__menu ${isMenuOpen && 'header__menu_active'}`} onClick={toggler}>
             <span></span>
             <span></span>
             <span></span>

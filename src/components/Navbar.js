@@ -15,7 +15,7 @@ const Navbar = ({ email, loggedIn, onSignOut, isOpen }) => (
         </Link>
       </Route>
       <Route path="/mesto-react">
-        <Link to="/signin" className="navbar__button navbar__button_logged " onClick={onSignOut}>
+        <Link to="/signin" className="navbar__button navbar__button_logged" onClick={onSignOut}>
           Выйти
         </Link>
       </Route>
