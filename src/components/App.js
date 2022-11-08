@@ -40,14 +40,14 @@ const App = () => {
     api
       .loadDefaultData()
       .then(([userInfo, defaultCards]) => {
-        setCurrentUser(userInfo);
+        setCurrentUser({ ...userInfo });
         setCards([...defaultCards]);
       })
       .catch(err => console.log(`Ошибка загрузки начальных данных! ${err}`));
   }, []);
 
   const closeAllPopups = useCallback(() => {
-    setSelectedCard(null);
+    setSelectedCard({});
     setEditAvatarPopup(false);
     setEditProfilePopup(false);
     setAddPlacePopup(false);
@@ -75,7 +75,7 @@ const App = () => {
         api
           .editUserData(userData)
           .then(response => {
-            setCurrentUser(response);
+            setCurrentUser({ ...response });
             closeAllPopups();
           })
           .catch(err => console.log(`Ошибка обновления данных пользователя! ${err}`))
@@ -94,7 +94,7 @@ const App = () => {
           })
           .catch(err => console.log(`Ошибка добавления новой карточки! ${err}`))
       ),
-    []
+    [cards]
   );
 
   const handleUpdateAvatar = useCallback(
@@ -103,7 +103,7 @@ const App = () => {
         api
           .setUserAvatar(newAvatar)
           .then(response => {
-            setCurrentUser(response);
+            setCurrentUser({ ...response });
             closeAllPopups();
           })
           .catch(err => console.log(`Ошибка обновления аватара пользователя! ${err}`))
@@ -134,7 +134,7 @@ const App = () => {
             .catch(err => console.log(`Ошибка удаления карточки! ${err}`)),
         'Удаление...'
       ),
-    []
+    [selectedCard]
   );
 
   const authenticate = useCallback(data => {
@@ -185,7 +185,7 @@ const App = () => {
   const onSignOut = useCallback(() => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
-  }, [setLoggedIn]);
+  }, []);
 
   useEffect(() => {
     checkToken();
@@ -214,7 +214,9 @@ const App = () => {
           <Route path="/signup">
             <Register loggedIn={loggedIn} onSubmit={onRegister} />
           </Route>
-          <Route>{loggedIn ? <Redirect to="/mesto-react" /> : <Redirect to="/signin" />}</Route>
+          <Route exact path="/">
+            {loggedIn ? <Redirect to="/mesto-react" /> : <Redirect to="/signin" />}
+          </Route>
         </Switch>
         <Footer />
         <PopupOnLoadContext.Provider value={textLoading}>
