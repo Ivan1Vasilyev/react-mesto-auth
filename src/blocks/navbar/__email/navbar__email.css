@@ -2,3 +2,15 @@
   margin: 8px 24px 0 0;
   font-weight: 500;
 }
+
+@media screen and (max-width: 880px) {
+  .navbar__email {
+    margin-top: 5px;
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .navbar__email {
+    margin: 4px 9px 0 0;
+  }
+}
