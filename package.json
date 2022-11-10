@@ -41,5 +41,5 @@
   "devDependencies": {
     "gh-pages": "^4.0.0"
   },
-  "homepage": "http://Ivan1Vasilyev.github.io/mesto-react-auth"
+  "homepage": "http://Ivan1Vasilyev.github.io/mesto-react-auth/"
 }
