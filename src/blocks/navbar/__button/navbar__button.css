@@ -2,6 +2,7 @@
   margin-top: 8px;
   text-decoration: none;
   color: #fff;
+  transition: 0.4s;
 }
 
 @media screen and (max-width: 934px) {
@@ -21,10 +22,6 @@
     margin-right: 9px;
   }
 }
-
-/* .navbar__button:hover {
-  opacity: 0.6;
-} */
 
 .navbar__button:hover {
   opacity: 0.6;

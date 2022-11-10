@@ -24,6 +24,12 @@
   opacity: 0.6;
 }
 
+@media (hover: none) {
+  .header__menu:hover {
+    opacity: 1;
+  }
+}
+
 @keyframes span1 {
   0% {
     transform: translateY(9px) rotate(45deg);
