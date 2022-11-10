@@ -204,7 +204,7 @@ const App = () => {
         <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
         <Switch>
           <ProtectedRoute
-            component={Main}
+            component={PageNotFoundgit}
             loggedIn={loggedIn}
             path="/main"
             onEditAvatar={openEditAvatarPopup}

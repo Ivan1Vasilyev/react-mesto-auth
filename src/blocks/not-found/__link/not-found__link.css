@@ -3,6 +3,8 @@
   text-decoration: none;
   color: #fff;
   margin: 0 20px 84px 0;
+  z-index: 1;
+  transition: 0.4s;
 }
 
 .not-found__link:hover {
