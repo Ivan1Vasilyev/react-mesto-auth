@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Popup from './Popup';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 
 const PopupWithForm = props => {
   const textLoading = React.useContext(PopupOnLoadContext);
-
-  const resetValidator = () => props.children?.filter(item => item.type === 'input').reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {});
-
+  const resetValidator = useCallback(
+    () => props.children?.filter(item => item.type === 'input').reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {}),
+    []
+  );
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const [validator, setValidator] = useState(resetValidator());
 
@@ -21,17 +22,20 @@ const PopupWithForm = props => {
     if (props.validate) props.validate(validator);
   }, [validator]);
 
-  const handleFormValidation = e => {
-    const { name, validationMessage, validity } = e.target;
-    setValidator({
-      ...validator,
-      [name]: {
-        message: validationMessage,
-        isInvalid: !validity.valid,
-      },
-    });
-    setIsFormInvalid(!e.currentTarget.checkValidity());
-  };
+  const handleFormValidation = useCallback(
+    e => {
+      const { name, validationMessage, validity } = e.target;
+      setValidator({
+        ...validator,
+        [name]: {
+          message: validationMessage,
+          isInvalid: !validity.valid,
+        },
+      });
+      setIsFormInvalid(!e.currentTarget.checkValidity());
+    },
+    [validator]
+  );
 
   return (
     <Popup onClose={props.onClose} type={`popup__form-container ${props.type}`} isOpen={props.isOpen}>

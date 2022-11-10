@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import logo from '../images/logo.svg';
 import Navbar from './Navbar';
 
 const Header = props => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const toggler = () => setIsMenuOpen(!isMenuOpen);
+  const toggler = useCallback(() => setIsMenuOpen(!isMenuOpen), [isMenuOpen]);
 
   return (
     <>

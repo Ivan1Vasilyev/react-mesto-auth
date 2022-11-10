@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
-  const inputRef = React.useRef();
+  const inputRef = useRef();
   const [inputsValidate, setInputsValidate] = useState({ avatar: {} });
 
   useEffect(() => {
     if (isOpen) inputRef.current.value = '';
   }, [isOpen]);
 
-  const getValidateData = validateData => setInputsValidate(validateData);
+  const getValidateData = useCallback(validateData => setInputsValidate(validateData), []);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onUpdateAvatar({
-      avatar: inputRef.current.value,
-    });
-  };
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      onUpdateAvatar({
+        avatar: inputRef.current.value,
+      });
+    },
+    [inputRef]
+  );
   return (
     <PopupWithForm
       name="edit-avatar"

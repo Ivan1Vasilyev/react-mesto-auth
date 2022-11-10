@@ -1,10 +1,14 @@
+import { useCallback } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const DeleteCardPopup = ({ isOpen, onClose, onDeleteCard }) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    onDeleteCard();
-  };
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      onDeleteCard();
+    },
+    [onDeleteCard]
+  );
   return (
     <PopupWithForm
       name="delete-card"

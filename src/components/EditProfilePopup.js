@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
-  const currentUser = React.useContext(CurrentUserContext);
-  const [formData, setFormData] = useState({
-    name: '',
-    about: '',
-  });
+  const currentUser = useContext(CurrentUserContext);
+  const [formData, setFormData] = useState({ name: '', about: '' });
   const [inputsValidate, setInputsValidate] = useState({ name: {}, about: {} });
 
-  const getValidateData = validateData => setInputsValidate(validateData);
+  const getValidateData = useCallback(validateData => setInputsValidate(validateData), []);
 
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const handleInputChange = useCallback(
+    e => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    },
+    [formData]
+  );
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onUpdateUser(formData);
-  };
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      onUpdateUser(formData);
+    },
+    [formData, onUpdateUser]
+  );
 
   useEffect(() => {
     if (isOpen) setFormData(currentUser);

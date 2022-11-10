@@ -1,35 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    link: '',
-  });
+  const [formData, setFormData] = useState({ name: '', link: '' });
   const [inputsValidate, setInputsValidate] = useState({ name: {}, link: {} });
 
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        name: '',
-        link: '',
-      });
+      setFormData({ name: '', link: '' });
     }
   }, [isOpen]);
 
-  const getValidateData = validateData => setInputsValidate(validateData);
+  const getValidateData = useCallback(validateData => setInputsValidate(validateData), []);
 
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-  const handleSubmit = e => {
-    e.preventDefault();
-    onAddPlace(formData);
-  };
+  const handleInputChange = useCallback(
+    e => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    },
+    [formData]
+  );
+
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      onAddPlace(formData);
+    },
+    [formData, onAddPlace]
+  );
 
   return (
     <PopupWithForm
