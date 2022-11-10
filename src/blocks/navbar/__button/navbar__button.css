@@ -27,7 +27,7 @@
 }
 
 @media (hover: none) {
-  .navbar__button:active {
+  .navbar__button {
     opacity: 1;
   }
 }
