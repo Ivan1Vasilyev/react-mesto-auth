@@ -221,9 +221,7 @@ const App = () => {
           <Route path="/sign-up">
             <Register loggedIn={loggedIn} onSubmit={onRegister} />
           </Route>
-          <Route exact path="/">
-            {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
-          </Route>
+          <Route>{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
           <Route path="*">
             <PageNotFound />
           </Route>
