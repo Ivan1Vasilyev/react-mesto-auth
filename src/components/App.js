@@ -205,7 +205,7 @@ const App = () => {
           <ProtectedRoute
             component={Main}
             loggedIn={loggedIn}
-            path="/"
+            path="/main"
             onEditAvatar={openEditAvatarPopup}
             onEditProfile={openEditProfilePopup}
             onAddPlace={openAddPlacePopup}
@@ -221,7 +221,7 @@ const App = () => {
             <Register loggedIn={loggedIn} onSubmit={onRegister} />
           </Route>
           <Route exact path="/">
-            {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+            {loggedIn ? <Redirect to="/main" /> : <Redirect to="/signin" />}
           </Route>
         </Switch>
         <Footer />
