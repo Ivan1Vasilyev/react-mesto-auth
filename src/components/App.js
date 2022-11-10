@@ -14,6 +14,7 @@ import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
+import PageNotFound from './PageNotFound';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 import { api } from '../utils/Api.js';
@@ -222,6 +223,9 @@ const App = () => {
           </Route>
           <Route exact path="/">
             {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
+          </Route>
+          <Route path="*">
+            <PageNotFound />
           </Route>
         </Switch>
         <Footer />

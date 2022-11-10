@@ -64,3 +64,5 @@
 @import url(./blocks/navbar/__button/navbar__button.css);
 @import url(./blocks/navbar/__button/_logged/navbar__button_logged.css);
 @import url(./blocks/navbar/__button/_showed/navbar__button_showed.css);
+@import url(./blocks/not-found/not-found.css);
+@import url(./blocks/not-found/__link/not-found__link.css);

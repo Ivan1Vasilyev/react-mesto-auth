@@ -1,0 +1,10 @@
+.not-found__link {
+  font-size: 24px;
+  text-decoration: none;
+  color: #fff;
+  margin: 0 20px 84px 0;
+}
+
+.not-found__link:hover {
+  opacity: 0.6;
+}
