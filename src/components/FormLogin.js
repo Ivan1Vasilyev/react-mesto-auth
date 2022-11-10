@@ -70,7 +70,7 @@ const FormLogin = props => {
       {props.isRegister && (
         <p className="form-login__caption">
           {'Уже зарегистрированы? '}
-          <Link to="/signin" className="form-login__link">
+          <Link to="/sign-in" className="form-login__link">
             Войти
           </Link>
         </p>

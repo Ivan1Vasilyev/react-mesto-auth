@@ -214,13 +214,13 @@ const App = () => {
             onCardLike={handleCardLike}
             onCardDelete={openDeleteCardPopup}
           />
-          <Route path="/signin">
+          <Route path="/sign-in">
             <Login loggedIn={loggedIn} onSubmit={onLogin} />
           </Route>
-          <Route path="/signup">
+          <Route path="/sign-up">
             <Register loggedIn={loggedIn} onSubmit={onRegister} />
           </Route>
-          <Route path="/">{loggedIn ? <Redirect to="/main" /> : <Redirect to="/signin" />}</Route>
+          <Route path="/">{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
         </Switch>
         <Footer />
         <PopupOnLoadContext.Provider value={textLoading}>
