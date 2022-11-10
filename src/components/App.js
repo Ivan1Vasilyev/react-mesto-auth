@@ -220,7 +220,9 @@ const App = () => {
           <Route path="/sign-up">
             <Register loggedIn={loggedIn} onSubmit={onRegister} />
           </Route>
-          <Route path="/">{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
+          <Route exact path="/">
+            {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
+          </Route>
         </Switch>
         <Footer />
         <PopupOnLoadContext.Provider value={textLoading}>
