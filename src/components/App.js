@@ -34,6 +34,7 @@ const App = () => {
   const [email, setEmail] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipOnError, setIsTooltipOnError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -147,9 +148,11 @@ const App = () => {
       authenticate(res);
       checkToken();
     } catch (err) {
+      const errorMessage = await err;
       setIsTooltipOnError(true);
       setIsInfoTooltipOpen(true);
-      console.log(err);
+      setErrorMessage(errorMessage);
+      console.log(errorMessage);
     }
   }, []);
 
@@ -157,14 +160,17 @@ const App = () => {
     try {
       const res = await userAuth.register(userData);
       if (res) {
+        console.log(res);
         setIsTooltipOnError(false);
         setIsInfoTooltipOpen(true);
         history.push('/signin');
       }
     } catch (err) {
+      const errorMessage = await err;
+      setErrorMessage(errorMessage);
       setIsTooltipOnError(true);
       setIsInfoTooltipOpen(true);
-      console.log(err);
+      console.log(errorMessage);
     }
   }, []);
 
@@ -220,7 +226,7 @@ const App = () => {
         </Switch>
         <Footer />
         <PopupOnLoadContext.Provider value={textLoading}>
-          <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} onError={isTooltipOnError} />
+          <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} onError={isTooltipOnError} errorMessage={errorMessage} />
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
           <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
           <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
