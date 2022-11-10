@@ -52,7 +52,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         onChange={handleInputChange}
         required
       />
-      <span className="form__input-error form__input-error_place_name">{inputsValidate.name.message}</span>
+      <span className="form__input-error">{inputsValidate.name.message}</span>
       <input
         className={`form__input ${inputsValidate.link.isInvalid && 'form__input_type_error'}`}
         type="url"
@@ -62,7 +62,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         onChange={handleInputChange}
         required
       />
-      <span className="form__input-error form__input-error_place_link">{inputsValidate.link.message}</span>
+      <span className="form__input-error">{inputsValidate.link.message}</span>
     </PopupWithForm>
   );
 };

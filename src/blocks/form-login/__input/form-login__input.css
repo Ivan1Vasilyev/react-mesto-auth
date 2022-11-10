@@ -1,14 +1,12 @@
 .form-login__input {
-  background-color: transparent !important;
+  background-color: transparent;
   font-weight: 500;
   font-size: 14px;
   line-height: 1.21;
   color: #ccc;
   border: none;
   border-bottom: 2px solid #ccc;
-  padding: 7px 0 7px;
-  margin-bottom: 23px;
-  background-clip: content-box;
+  padding: 7px 0;
 }
 
 .form-login__input:-webkit-autofill {

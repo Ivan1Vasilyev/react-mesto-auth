@@ -41,7 +41,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
         onChange={handleInputChange}
         required
       />
-      <span className="form__input-error form__input-error_place_name">{inputsValidate.name.message}</span>
+      <span className="form__input-error">{inputsValidate.name.message}</span>
       <input
         className={`form__input ${inputsValidate.about.isInvalid && 'form__input_type_error'}`}
         type="text"
@@ -52,7 +52,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
         onChange={handleInputChange}
         required
       />
-      <span className="form__input-error form__input-error_place_about">{inputsValidate.about.message}</span>
+      <span className="form__input-error">{inputsValidate.about.message}</span>
     </PopupWithForm>
   );
 };

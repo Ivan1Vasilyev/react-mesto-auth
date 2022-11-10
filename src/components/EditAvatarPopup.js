@@ -35,7 +35,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
         name="avatar"
         required
       />
-      <span className="form__input-error form__input-error_place_avatar">{inputsValidate.avatar.message}</span>
+      <span className="form__input-error">{inputsValidate.avatar.message}</span>
     </PopupWithForm>
   );
 };
