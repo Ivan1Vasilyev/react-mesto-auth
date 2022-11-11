@@ -4,11 +4,7 @@ class Api {
     this._headers = settings.headers;
   }
 
-  _responseHandler = response =>
-    response.ok
-      ? response.json()
-      : Promise.reject(`Статус: ${response.status}`);
-
+  _responseHandler = response => (response.ok ? response.json() : Promise.reject(`Статус: ${response.status}`));
   _getUserInfo = () =>
     fetch(`${this._address}users/me`, {
       method: 'GET',
@@ -19,15 +15,13 @@ class Api {
         this.id = response._id;
         return response;
       });
-
   _getDefaultCards = () =>
     fetch(`${this._address}cards`, {
       method: 'GET',
       headers: this._headers,
     }).then(this._responseHandler);
 
-  loadDefaultData = () =>
-    Promise.all([this._getUserInfo(), this._getDefaultCards()]);
+  loadDefaultData = () => Promise.all([this._getUserInfo(), this._getDefaultCards()]);
 
   editUserData = newData =>
     fetch(`${this._address}users/me`, {
@@ -63,9 +57,7 @@ class Api {
     }).then(this._responseHandler);
 
   toggleLike = card =>
-    card.likes.some(user => user._id === this.id)
-      ? this._removeLikeCard(card._id)
-      : this._addLikeCard(card._id);
+    card.likes.some(user => user._id === this.id) ? this._removeLikeCard(card._id) : this._addLikeCard(card._id);
 
   deleteCard = id =>
     fetch(`${this._address}cards/${id}`, {
