@@ -1,9 +1,9 @@
-.form__title_type_delete-card {
+.form__title_type_confirm {
   margin-bottom: 14px;
 }
 
 @media screen and (max-width: 590px) {
-  .form__title_type_delete-card {
+  .form__title_type_confirm {
     margin-bottom: 35px;
   }
 }

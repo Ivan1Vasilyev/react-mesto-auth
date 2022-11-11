@@ -9,7 +9,7 @@ import EditProfilePopup from './EditProfilePopup';
 import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import ImagePopup from './ImagePopup';
-import DeleteCardPopup from './DeleteCardPopup';
+import ConfirmationPopup from './ConfirmationPopup';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
@@ -17,7 +17,7 @@ import InfoTooltip from './InfoTooltip';
 import PageNotFound from './PageNotFound';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
-import { api } from '../utils/apiClass.js';
+import { api } from '../utils/api.js';
 import { uxWrap } from '../utils/utils';
 import * as userAuth from '../utils/auth';
 
@@ -27,6 +27,7 @@ const App = () => {
   const [isEditAvatarPopupOpen, setEditAvatarPopup] = useState(false);
   const [isImagePopupOpen, setImagePopup] = useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopup] = useState(false);
+  const [isLogOutPopupOpen, setIsLogOutPopupOpen] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
@@ -58,11 +59,13 @@ const App = () => {
     setImagePopup(false);
     setDeleteCardPopup(false);
     setIsInfoTooltipOpen(false);
+    setIsLogOutPopupOpen(false);
   }, []);
 
   const openEditAvatarPopup = useCallback(() => setEditAvatarPopup(true), []);
   const openEditProfilePopup = useCallback(() => setEditProfilePopup(true), []);
   const openAddPlacePopup = useCallback(() => setAddPlacePopup(true), []);
+  const openLogOutPopup = useCallback(() => setIsLogOutPopupOpen(true), []);
   const openDeleteCardPopup = useCallback(card => {
     setDeleteCardPopup(true);
     setSelectedCard(card);
@@ -209,6 +212,7 @@ const App = () => {
   const onSignOut = useCallback(() => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
+    closeAllPopups();
   }, []);
 
   useEffect(() => {
@@ -219,7 +223,7 @@ const App = () => {
     <CurrentUserContext.Provider value={currentUser}>
       <PopupOnLoadContext.Provider value={textLoading}>
         <Page>
-          <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
+          <Header email={email} loggedIn={loggedIn} onSignOut={openLogOutPopup} />
           <Switch>
             <ProtectedRoute
               component={Main}
@@ -239,9 +243,7 @@ const App = () => {
             <Route path="/sign-up">
               <Register name="register" loggedIn={loggedIn} onSubmit={onRegister} />
             </Route>
-            <Route exact path="/">
-              {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
-            </Route>
+            <Route path="/">{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
             <Route path="*">
               <PageNotFound />
             </Route>
@@ -260,7 +262,8 @@ const App = () => {
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
           />
-          <DeleteCardPopup isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} onDeleteCard={handleDeleteCard} />
+          <ConfirmationPopup isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} onConfirm={handleDeleteCard} />
+          <ConfirmationPopup isOpen={isLogOutPopupOpen} onClose={closeAllPopups} onConfirm={onSignOut} />
           <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
         </Page>
       </PopupOnLoadContext.Provider>
