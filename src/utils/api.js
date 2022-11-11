@@ -5,6 +5,7 @@ class Api {
   }
 
   _responseHandler = response => (response.ok ? response.json() : Promise.reject(`Статус: ${response.status}`));
+
   _getUserInfo = () =>
     fetch(`${this._address}users/me`, {
       method: 'GET',
@@ -15,6 +16,7 @@ class Api {
         this.id = response._id;
         return response;
       });
+
   _getDefaultCards = () =>
     fetch(`${this._address}cards`, {
       method: 'GET',
