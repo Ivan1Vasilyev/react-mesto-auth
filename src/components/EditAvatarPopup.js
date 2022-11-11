@@ -12,12 +12,10 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
   const getValidateData = useCallback(validateData => setInputsValidate(validateData), []);
 
   const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
+    () =>
       onUpdateAvatar({
         avatar: inputRef.current.value,
-      });
-    },
+      }),
     [inputRef]
   );
   return (

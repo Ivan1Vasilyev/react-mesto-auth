@@ -17,20 +17,21 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     [formData]
   );
 
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      onUpdateUser(formData);
-    },
-    [formData, onUpdateUser]
-  );
+  const handleSubmit = useCallback(() => onUpdateUser(formData), [formData, onUpdateUser]);
 
   useEffect(() => {
     if (isOpen) setFormData(currentUser);
   }, [isOpen]);
 
   return (
-    <PopupWithForm name="profile" title="Редактировать профиль" isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit} validate={getValidateData}>
+    <PopupWithForm
+      name="profile"
+      title="Редактировать профиль"
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      validate={getValidateData}
+    >
       <input
         className={`form__input ${inputsValidate.name.isInvalid && 'form__input_type_error'}`}
         type="text"

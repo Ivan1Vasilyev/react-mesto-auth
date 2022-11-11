@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 
 const FormLogin = props => {
+  const textLoading = useContext(PopupOnLoadContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [inputsValidate, setInputsValidate] = useState({ email: '', password: '' });
-  const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const [isFormInvalid, setIsFormInvalid] = useState(true);
 
   const handleFormValidation = useCallback(
     e => {
@@ -33,13 +35,20 @@ const FormLogin = props => {
     e => {
       e.preventDefault();
       props.onSubmit(formData);
+      setIsFormInvalid(true);
     },
     [formData]
   );
 
   return (
     <div className="form-login">
-      <form className="form-login__form" name={props.name} onSubmit={handleSubmit} onChange={handleFormValidation} noValidate>
+      <form
+        className="form-login__form"
+        name={props.name}
+        onSubmit={handleSubmit}
+        onChange={handleFormValidation}
+        noValidate
+      >
         <h2 className="form-login__title">{props.title}</h2>
         <input
           className="form-login__input"
@@ -64,7 +73,7 @@ const FormLogin = props => {
         />
         <span className="form-login__input-error">{inputsValidate.password}</span>
         <button className="form-login__submit-button" type="submit" disabled={isFormInvalid}>
-          {props.buttonText}
+          {textLoading ? textLoading : props.buttonText}
         </button>
       </form>
       {props.isRegister && (

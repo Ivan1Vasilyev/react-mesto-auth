@@ -21,13 +21,7 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
     [formData]
   );
 
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      onAddPlace(formData);
-    },
-    [formData, onAddPlace]
-  );
+  const handleSubmit = useCallback(() => onAddPlace(formData), [formData, onAddPlace]);
 
   return (
     <PopupWithForm

@@ -17,7 +17,7 @@ import InfoTooltip from './InfoTooltip';
 import PageNotFound from './PageNotFound';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
-import { api } from '../utils/api.js';
+import { api } from '../utils/apiClass.js';
 import { uxWrap } from '../utils/utils';
 import * as userAuth from '../utils/auth';
 
@@ -145,36 +145,51 @@ const App = () => {
     localStorage.setItem('jwt', data.token);
   }, []);
 
-  const onLogin = useCallback(async userData => {
-    try {
-      const res = await userAuth.login(userData);
-      authenticate(res);
-      checkToken();
-    } catch (err) {
-      const errorMessage = await err;
-      setIsTooltipOnError(true);
-      setIsInfoTooltipOpen(true);
-      setErrorMessage(errorMessage);
-      console.log(errorMessage);
-    }
-  }, []);
+  const onLogin = useCallback(
+    userData =>
+      uxWrap(
+        setTextLoading,
+        async () => {
+          try {
+            const res = await userAuth.login(userData);
+            authenticate(res);
+            checkToken();
+          } catch (err) {
+            const errorMessage = await err;
+            setIsTooltipOnError(true);
+            setIsInfoTooltipOpen(true);
+            setErrorMessage(errorMessage);
+            console.log(errorMessage);
+          }
+        },
+        'Вход...'
+      ),
 
-  const onRegister = useCallback(async userData => {
-    try {
-      const res = await userAuth.register(userData);
-      if (res) {
-        console.log(res);
-        setIsTooltipOnError(false);
-        setIsInfoTooltipOpen(true);
-        history.push('/signin');
-      }
-    } catch (err) {
-      const errorMessage = await err;
-      setErrorMessage(errorMessage);
-      setIsTooltipOnError(true);
-      setIsInfoTooltipOpen(true);
-      console.log(errorMessage);
-    }
+    []
+  );
+
+  const onRegister = useCallback(userData => {
+    uxWrap(
+      setTextLoading,
+      async () => {
+        try {
+          const res = await userAuth.register(userData);
+          if (res) {
+            console.log(res);
+            setIsTooltipOnError(false);
+            setIsInfoTooltipOpen(true);
+            history.push('/signin');
+          }
+        } catch (err) {
+          const errorMessage = await err;
+          setErrorMessage(errorMessage);
+          setIsTooltipOnError(true);
+          setIsInfoTooltipOpen(true);
+          console.log(errorMessage);
+        }
+      },
+      'Регистрация...'
+    );
   }, []);
 
   const checkToken = useCallback(async () => {
@@ -202,42 +217,53 @@ const App = () => {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Page>
-        <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
-        <Switch>
-          <ProtectedRoute
-            component={Main}
-            loggedIn={loggedIn}
-            path="/main"
-            onEditAvatar={openEditAvatarPopup}
-            onEditProfile={openEditProfilePopup}
-            onAddPlace={openAddPlacePopup}
-            showFullImageClick={showFullImageClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={openDeleteCardPopup}
+      <PopupOnLoadContext.Provider value={textLoading}>
+        <Page>
+          <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
+          <Switch>
+            <ProtectedRoute
+              component={Main}
+              loggedIn={loggedIn}
+              path="/main"
+              onEditAvatar={openEditAvatarPopup}
+              onEditProfile={openEditProfilePopup}
+              onAddPlace={openAddPlacePopup}
+              showFullImageClick={showFullImageClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={openDeleteCardPopup}
+            />
+            <Route path="/sign-in">
+              <Login name="login" loggedIn={loggedIn} onSubmit={onLogin} />
+            </Route>
+            <Route path="/sign-up">
+              <Register name="register" loggedIn={loggedIn} onSubmit={onRegister} />
+            </Route>
+            <Route exact path="/">
+              {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
+            </Route>
+            <Route path="*">
+              <PageNotFound />
+            </Route>
+          </Switch>
+          <Footer />
+          <InfoTooltip
+            isOpen={isInfoTooltipOpen}
+            onClose={closeAllPopups}
+            onError={isTooltipOnError}
+            errorMessage={errorMessage}
           />
-          <Route path="/sign-in">
-            <Login loggedIn={loggedIn} onSubmit={onLogin} />
-          </Route>
-          <Route path="/sign-up">
-            <Register loggedIn={loggedIn} onSubmit={onRegister} />
-          </Route>
-          <Route path="/">{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
-          <Route path="*">
-            <PageNotFound />
-          </Route>
-        </Switch>
-        <Footer />
-        <PopupOnLoadContext.Provider value={textLoading}>
-          <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} onError={isTooltipOnError} errorMessage={errorMessage} />
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
           <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
-          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
           <DeleteCardPopup isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} onDeleteCard={handleDeleteCard} />
-        </PopupOnLoadContext.Provider>
-        <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
-      </Page>
+          <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
+        </Page>
+      </PopupOnLoadContext.Provider>
     </CurrentUserContext.Provider>
   );
 };

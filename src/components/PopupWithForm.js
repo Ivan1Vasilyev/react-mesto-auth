@@ -1,19 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import Popup from './Popup';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 
 const PopupWithForm = props => {
-  const textLoading = React.useContext(PopupOnLoadContext);
+  const textLoading = useContext(PopupOnLoadContext);
   const resetValidator = useCallback(
-    () => props.children?.filter(item => item.type === 'input').reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {}),
-    []
+    () =>
+      props.children
+        ?.filter(item => item.type === 'input')
+        .reduce((acc, item) => ({ ...acc, [item.props.name]: {} }), {}),
+    [props.children]
   );
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const [validator, setValidator] = useState(resetValidator());
 
   useEffect(() => {
     if (props.isOpen) {
-      setIsFormInvalid(true);
+      !props.children ? setIsFormInvalid(false) : setIsFormInvalid(true);
       setValidator(resetValidator());
     }
   }, [props.isOpen]);
@@ -21,6 +24,15 @@ const PopupWithForm = props => {
   useEffect(() => {
     if (props.validate) props.validate(validator);
   }, [validator]);
+
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      props.onSubmit();
+      setIsFormInvalid(true);
+    },
+    [props.onSubmit]
+  );
 
   const handleFormValidation = useCallback(
     e => {
@@ -39,13 +51,15 @@ const PopupWithForm = props => {
 
   return (
     <Popup onClose={props.onClose} type={`popup__form-container ${props.type}`} isOpen={props.isOpen}>
-      <form className="form" name={props.name} onSubmit={props.onSubmit} onChange={handleFormValidation} noValidate>
+      <form className="form" name={props.name} onSubmit={handleSubmit} onChange={handleFormValidation} noValidate>
         <h2 className={`form__title ${props.titleClassType}`}>{props.title}</h2>
         {props.children}
         <button
-          className={`form__submit-button ${props.isButtonEnabled ? '' : isFormInvalid && 'form__submit-button_disabled'}`}
+          className={`form__submit-button ${
+            props.isButtonEnabled ? '' : isFormInvalid && 'form__submit-button_disabled'
+          }`}
           type="submit"
-          disabled={props.isButtonEnabled ? false : isFormInvalid}
+          disabled={isFormInvalid}
         >
           {textLoading ? textLoading : props.buttonText || 'Сохранить'}
         </button>
