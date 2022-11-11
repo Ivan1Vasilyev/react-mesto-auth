@@ -17,7 +17,7 @@ import InfoTooltip from './InfoTooltip';
 import PageNotFound from './PageNotFound';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
-import { api } from '../utils/Api.js';
+import { api } from '../utils/api.js';
 import { uxWrap } from '../utils/utils';
 import * as userAuth from '../utils/auth';
 
@@ -39,14 +39,16 @@ const App = () => {
   const history = useHistory();
 
   useEffect(() => {
-    api
-      .loadDefaultData()
-      .then(([userInfo, defaultCards]) => {
-        setCurrentUser({ ...userInfo });
-        setCards([...defaultCards]);
-      })
-      .catch(err => console.log(`Ошибка загрузки начальных данных! ${err}`));
-  }, []);
+    if (loggedIn) {
+      api
+        .loadDefaultData()
+        .then(([userInfo, defaultCards]) => {
+          setCurrentUser({ ...userInfo });
+          setCards([...defaultCards]);
+        })
+        .catch(err => console.log(`Ошибка загрузки начальных данных! ${err}`));
+    }
+  }, [loggedIn]);
 
   const closeAllPopups = useCallback(() => {
     setSelectedCard({});
