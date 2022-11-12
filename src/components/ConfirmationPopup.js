@@ -1,15 +1,13 @@
 import PopupWithForm from './PopupWithForm';
 
-const ConfirmationPopup = ({ isOpen, onClose, onConfirm }) => (
+const ConfirmationPopup = props => (
   <PopupWithForm
-    name="delete-card"
+    name="confirm"
     title="Вы уверены?"
     type="popup__form-container_type_confirm"
     buttonText="Да"
     titleClassType="form__title_type_confirm"
-    isOpen={isOpen}
-    onClose={onClose}
-    onSubmit={onConfirm}
+    {...props}
   />
 );
 export default ConfirmationPopup;

@@ -26,8 +26,7 @@ const App = () => {
   const [isAddPlacePopupOpen, setAddPlacePopup] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopup] = useState(false);
   const [isImagePopupOpen, setImagePopup] = useState(false);
-  const [isDeleteCardPopupOpen, setDeleteCardPopup] = useState(false);
-  const [isLogOutPopupOpen, setIsLogOutPopupOpen] = useState(false);
+  const [isConfirmPopupOpen, setConfirmPopupOpen] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
@@ -37,6 +36,7 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipOnError, setIsTooltipOnError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [onDeleteCard, setOnDeleteCard] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -57,19 +57,23 @@ const App = () => {
     setEditProfilePopup(false);
     setAddPlacePopup(false);
     setImagePopup(false);
-    setDeleteCardPopup(false);
+    setConfirmPopupOpen(false);
     setIsInfoTooltipOpen(false);
-    setIsLogOutPopupOpen(false);
   }, []);
 
   const openEditAvatarPopup = useCallback(() => setEditAvatarPopup(true), []);
   const openEditProfilePopup = useCallback(() => setEditProfilePopup(true), []);
   const openAddPlacePopup = useCallback(() => setAddPlacePopup(true), []);
-  const openLogOutPopup = useCallback(() => setIsLogOutPopupOpen(true), []);
   const openDeleteCardPopup = useCallback(card => {
-    setDeleteCardPopup(true);
+    setConfirmPopupOpen(true);
     setSelectedCard(card);
+    setOnDeleteCard(true);
   }, []);
+
+  const openLogOutPopup = useCallback(() => {
+    setConfirmPopupOpen(true);
+    setOnDeleteCard(false);
+  });
 
   const showFullImageClick = useCallback(card => {
     setImagePopup(true);
@@ -262,8 +266,11 @@ const App = () => {
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
           />
-          <ConfirmationPopup isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} onConfirm={handleDeleteCard} />
-          <ConfirmationPopup isOpen={isLogOutPopupOpen} onClose={closeAllPopups} onConfirm={onSignOut} />
+          <ConfirmationPopup
+            isOpen={isConfirmPopupOpen}
+            onClose={closeAllPopups}
+            onSubmit={onDeleteCard ? handleDeleteCard : onSignOut}
+          />
           <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
         </Page>
       </PopupOnLoadContext.Provider>
