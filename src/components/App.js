@@ -73,7 +73,7 @@ const App = () => {
   const openLogOutPopup = useCallback(() => {
     setConfirmPopupOpen(true);
     setOnDeleteCard(false);
-  });
+  }, []);
 
   const showFullImageClick = useCallback(card => {
     setImagePopup(true);
@@ -171,7 +171,6 @@ const App = () => {
         },
         'Вход...'
       ),
-
     []
   );
 
@@ -211,7 +210,7 @@ const App = () => {
     } catch (err) {
       console.log(err);
     }
-  });
+  }, []);
 
   const onSignOut = useCallback(() => {
     localStorage.removeItem('jwt');
@@ -224,9 +223,9 @@ const App = () => {
   }, []);
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <PopupOnLoadContext.Provider value={textLoading}>
-        <Page>
+    <Page>
+      <CurrentUserContext.Provider value={currentUser}>
+        <PopupOnLoadContext.Provider value={textLoading}>
           <Header email={email} loggedIn={loggedIn} onSignOut={openLogOutPopup} />
           <Switch>
             <ProtectedRoute
@@ -272,9 +271,9 @@ const App = () => {
             onSubmit={onDeleteCard ? handleDeleteCard : onSignOut}
           />
           <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
-        </Page>
-      </PopupOnLoadContext.Provider>
-    </CurrentUserContext.Provider>
+        </PopupOnLoadContext.Provider>
+      </CurrentUserContext.Provider>
+    </Page>
   );
 };
 
