@@ -5,9 +5,7 @@ const Popup = props => {
     if (!props.isOpen) return;
 
     const handleEscClose = event => {
-      if (event.key === 'Escape') {
-        props.onClose();
-      }
+      if (event.key === 'Escape') props.onClose();
     };
 
     document.addEventListener('keydown', handleEscClose);
@@ -23,7 +21,12 @@ const Popup = props => {
     <div className={`popup ${props.backGround} ${props.isOpen && 'popup_opened'}`} onClick={handleClickClosePopup}>
       <div className={props.type}>
         {props.children}
-        <button className="popup__close-icon" type="button" aria-label="Закрыть" onClick={handleClickClosePopup}></button>
+        <button
+          className="popup__close-icon"
+          type="button"
+          aria-label="Закрыть"
+          onClick={handleClickClosePopup}
+        ></button>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ import PageNotFound from './PageNotFound';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
 import { api } from '../utils/api.js';
-import { uxWrap } from '../utils/utils';
+import { uxWrap, handleError } from '../utils/utils';
 import * as userAuth from '../utils/auth';
 
 const App = () => {
@@ -36,20 +36,8 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipOnError, setIsTooltipOnError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [onDeleteCard, setOnDeleteCard] = useState(false);
+  const [confirmCallback, setConfirmCallback] = useState(() => () => {});
   const history = useHistory();
-
-  useEffect(() => {
-    if (loggedIn) {
-      api
-        .loadDefaultData()
-        .then(([userInfo, defaultCards]) => {
-          setCurrentUser({ ...userInfo });
-          setCards([...defaultCards]);
-        })
-        .catch(err => console.log(`Ошибка загрузки начальных данных! ${err}`));
-    }
-  }, [loggedIn]);
 
   const closeAllPopups = useCallback(() => {
     setSelectedCard({});
@@ -66,13 +54,11 @@ const App = () => {
   const openAddPlacePopup = useCallback(() => setAddPlacePopup(true), []);
   const openDeleteCardPopup = useCallback(card => {
     setConfirmPopupOpen(true);
-    setSelectedCard(card);
-    setOnDeleteCard(true);
+    setConfirmCallback(() => () => handleDeleteCard(card._id));
   }, []);
-
   const openLogOutPopup = useCallback(() => {
     setConfirmPopupOpen(true);
-    setOnDeleteCard(false);
+    setConfirmCallback(() => onSignOut);
   }, []);
 
   const showFullImageClick = useCallback(card => {
@@ -82,70 +68,76 @@ const App = () => {
 
   const handleUpdateUser = useCallback(
     userData =>
-      uxWrap(setTextLoading, () =>
-        api
-          .editUserData(userData)
-          .then(response => {
-            setCurrentUser({ ...response });
-            closeAllPopups();
-          })
-          .catch(err => console.log(`Ошибка обновления данных пользователя! ${err}`))
-      ),
+      uxWrap(setTextLoading, async () => {
+        try {
+          const updatedData = await api.editUserData(userData);
+          setCurrentUser({ ...updatedData });
+          closeAllPopups();
+        } catch (err) {
+          console.log('Ошибка обновления данных пользователя.');
+          handleError(err);
+        }
+      }),
     []
   );
 
   const handleAddPlace = useCallback(
     placeData =>
-      uxWrap(setTextLoading, () =>
-        api
-          .addCard(placeData)
-          .then(response => {
-            setCards([response, ...cards]);
-            closeAllPopups();
-          })
-          .catch(err => console.log(`Ошибка добавления новой карточки! ${err}`))
-      ),
+      uxWrap(setTextLoading, async () => {
+        try {
+          const newCard = await api.addCard(placeData);
+          setCards([newCard, ...cards]);
+          closeAllPopups();
+        } catch (err) {
+          console.log('Ошибка добавления новой карточки.');
+          handleError(err);
+        }
+      }),
     [cards]
   );
 
   const handleUpdateAvatar = useCallback(
     newAvatar =>
-      uxWrap(setTextLoading, () =>
-        api
-          .setUserAvatar(newAvatar)
-          .then(response => {
-            setCurrentUser({ ...response });
-            closeAllPopups();
-          })
-          .catch(err => console.log(`Ошибка обновления аватара пользователя! ${err}`))
-      ),
+      uxWrap(setTextLoading, async () => {
+        try {
+          const data = await api.setUserAvatar(newAvatar);
+          setCurrentUser({ ...currentUser, avatar: data.avatar });
+          closeAllPopups();
+        } catch (err) {
+          console.log('Ошибка обновления аватара пользователя.');
+          handleError(err);
+        }
+      }),
     []
   );
 
-  const handleCardLike = useCallback(
-    card =>
-      api
-        .toggleLike(card)
-        .then(newCard => setCards(state => state.map(c => (c._id === card._id ? newCard : c))))
-        .catch(err => console.log(`Ошибка загрузки данных лайка карточки! ${err}`)),
-    []
-  );
+  const handleCardLike = useCallback(async card => {
+    try {
+      const updatedCard = await api.toggleLike(card);
+      setCards(state => state.map(c => (c._id === card._id ? updatedCard : c)));
+    } catch (err) {
+      console.log('Ошибка загрузки данных лайка карточки.');
+      handleError(err);
+    }
+  }, []);
 
   const handleDeleteCard = useCallback(
-    () =>
+    cardId =>
       uxWrap(
         setTextLoading,
-        () =>
-          api
-            .deleteCard(selectedCard._id)
-            .then(() => {
-              setCards(cards => cards.filter(c => c._id !== selectedCard._id));
-              closeAllPopups();
-            })
-            .catch(err => console.log(`Ошибка удаления карточки! ${err}`)),
+        async () => {
+          try {
+            await api.deleteCard(cardId);
+            setCards(cards => cards.filter(c => c._id !== cardId));
+            closeAllPopups();
+          } catch (err) {
+            console.log('Ошибка удаления карточки.');
+            handleError(err);
+          }
+        },
         'Удаление...'
       ),
-    [selectedCard]
+    []
   );
 
   const authenticate = useCallback(data => {
@@ -203,10 +195,9 @@ const App = () => {
       const jwt = localStorage.getItem('jwt');
       if (!jwt) throw new Error('Нет токена');
       const user = await userAuth.checkToken(jwt);
-      if (user) {
-        setEmail(user.data.email);
-        setLoggedIn(true);
-      }
+      if (!user) throw new Error('Такого пользователя нет в базе.');
+      setEmail(user.data.email);
+      setLoggedIn(true);
     } catch (err) {
       console.log(err);
     }
@@ -217,6 +208,22 @@ const App = () => {
     setLoggedIn(false);
     closeAllPopups();
   }, []);
+
+  useEffect(() => {
+    const loadDefaultData = async () => {
+      try {
+        const [userInfo, defaultCards] = await api.loadDefaultData();
+        setCurrentUser({ ...userInfo });
+        setCards([...defaultCards]);
+      } catch (err) {
+        console.log('Ошибка загрузки начальных данных.');
+        handleError(err);
+      }
+    };
+    if (loggedIn) {
+      loadDefaultData();
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     checkToken();
@@ -246,7 +253,9 @@ const App = () => {
             <Route path="/sign-up">
               <Register name="register" loggedIn={loggedIn} onSubmit={onRegister} />
             </Route>
-            <Route path="/">{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
+            <Route exact path="/">
+              {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
+            </Route>
             <Route path="*">
               <PageNotFound />
             </Route>
@@ -265,11 +274,7 @@ const App = () => {
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
           />
-          <ConfirmationPopup
-            isOpen={isConfirmPopupOpen}
-            onClose={closeAllPopups}
-            onSubmit={onDeleteCard ? handleDeleteCard : onSignOut}
-          />
+          <ConfirmationPopup isOpen={isConfirmPopupOpen} onClose={closeAllPopups} onSubmit={confirmCallback} />
           <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
         </PopupOnLoadContext.Provider>
       </CurrentUserContext.Provider>

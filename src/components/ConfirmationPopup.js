@@ -10,4 +10,5 @@ const ConfirmationPopup = props => (
     {...props}
   />
 );
+
 export default ConfirmationPopup;

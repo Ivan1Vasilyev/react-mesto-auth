@@ -4,7 +4,7 @@ class Api {
     this._headers = settings.headers;
   }
 
-  _responseHandler = response => (response.ok ? response.json() : Promise.reject(`Статус: ${response.status}`));
+  _responseHandler = response => (response.ok ? response.json() : Promise.reject(response.json()));
 
   _getUserInfo = () =>
     fetch(`${this._address}users/me`, {
