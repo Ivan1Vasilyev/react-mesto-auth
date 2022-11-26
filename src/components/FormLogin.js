@@ -41,7 +41,7 @@ const FormLogin = props => {
       >
         <h2 className="form-login__title">{props.title}</h2>
         <input
-          className={`form-login__input ${inputsValidate.email && 'form-login__input_type_error'}`}
+          className="form-login__input"
           type="email"
           name="email"
           placeholder="Email"
@@ -51,7 +51,7 @@ const FormLogin = props => {
         />
         <span className="form-login__input-error">{inputsValidate.email}</span>
         <input
-          className={`form-login__input ${inputsValidate.password ? 'form-login__input_type_error' : ''}`}
+          className="form-login__input"
           type="password"
           name="password"
           minLength={4}
