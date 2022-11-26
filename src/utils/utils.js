@@ -3,7 +3,9 @@ export const uxWrap = (setter, callback, textLoading = 'Сохранение...'
   return callback().finally(() => setter(''));
 };
 
-export const handleError = async err => {
+export const handleError = async (err, message) => {
   const error = await err;
-  console.log(error.message);
+  if (message) console.log(message);
+  console.log(error.message || error.error);
+  return error;
 };

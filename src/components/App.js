@@ -74,8 +74,7 @@ const App = () => {
           setCurrentUser({ ...updatedData });
           closeAllPopups();
         } catch (err) {
-          console.log('Ошибка обновления данных пользователя.');
-          handleError(err);
+          handleError(err, 'Ошибка обновления данных пользователя.');
         }
       }),
     []
@@ -89,8 +88,7 @@ const App = () => {
           setCards([newCard, ...cards]);
           closeAllPopups();
         } catch (err) {
-          console.log('Ошибка добавления новой карточки.');
-          handleError(err);
+          handleError(err, 'Ошибка добавления новой карточки.');
         }
       }),
     [cards]
@@ -104,8 +102,7 @@ const App = () => {
           setCurrentUser({ ...currentUser, avatar: data.avatar });
           closeAllPopups();
         } catch (err) {
-          console.log('Ошибка обновления аватара пользователя.');
-          handleError(err);
+          handleError(err, 'Ошибка обновления аватара пользователя.');
         }
       }),
     []
@@ -116,8 +113,7 @@ const App = () => {
       const updatedCard = await api.toggleLike(card);
       setCards(state => state.map(c => (c._id === card._id ? updatedCard : c)));
     } catch (err) {
-      console.log('Ошибка загрузки данных лайка карточки.');
-      handleError(err);
+      handleError(err, 'Ошибка загрузки данных лайка карточки.');
     }
   }, []);
 
@@ -131,8 +127,7 @@ const App = () => {
             setCards(cards => cards.filter(c => c._id !== cardId));
             closeAllPopups();
           } catch (err) {
-            console.log('Ошибка удаления карточки.');
-            handleError(err);
+            handleError(err, 'Ошибка удаления карточки.');
           }
         },
         'Удаление...'
@@ -154,11 +149,10 @@ const App = () => {
             authenticate(res);
             checkToken();
           } catch (err) {
-            const errorMessage = await err;
+            const errorMessage = await handleError(err);
             setIsTooltipOnError(true);
             setIsInfoTooltipOpen(true);
             setErrorMessage(errorMessage);
-            console.log(errorMessage);
           }
         },
         'Вход...'
@@ -173,17 +167,15 @@ const App = () => {
         try {
           const res = await userAuth.register(userData);
           if (res) {
-            console.log(res);
             setIsTooltipOnError(false);
             setIsInfoTooltipOpen(true);
             history.push('/signin');
           }
         } catch (err) {
-          const errorMessage = await err;
-          setErrorMessage(errorMessage);
+          const errorMessage = await handleError(err);
           setIsTooltipOnError(true);
           setIsInfoTooltipOpen(true);
-          console.log(errorMessage);
+          setErrorMessage(errorMessage);
         }
       },
       'Регистрация...'
@@ -216,8 +208,7 @@ const App = () => {
         setCurrentUser({ ...userInfo });
         setCards([...defaultCards]);
       } catch (err) {
-        console.log('Ошибка загрузки начальных данных.');
-        handleError(err);
+        handleError(err, 'Ошибка загрузки начальных данных.');
       }
     };
     if (loggedIn) {
