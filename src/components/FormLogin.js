@@ -1,12 +1,13 @@
 import { useCallback, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PopupOnLoadContext } from '../contexts/PopupOnLoadContext';
+import useForm from '../hooks/useForm';
 
 const FormLogin = props => {
   const textLoading = useContext(PopupOnLoadContext);
-  const [formData, setFormData] = useState({ email: '', password: '' });
   const [inputsValidate, setInputsValidate] = useState({ email: '', password: '' });
   const [isFormInvalid, setIsFormInvalid] = useState(true);
+  const { values, handleChange } = useForm({ email: '', password: '' });
 
   const handleFormValidation = useCallback(
     e => {
@@ -20,24 +21,13 @@ const FormLogin = props => {
     [inputsValidate]
   );
 
-  const handleInputChange = useCallback(
-    e => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    },
-    [formData]
-  );
-
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      props.onSubmit(formData);
+      props.onSubmit(values);
       setIsFormInvalid(true);
     },
-    [formData]
+    [values]
   );
 
   return (
@@ -51,24 +41,24 @@ const FormLogin = props => {
       >
         <h2 className="form-login__title">{props.title}</h2>
         <input
-          className="form-login__input"
+          className={`form-login__input ${inputsValidate.email && 'form-login__input_type_error'}`}
           type="email"
           name="email"
           placeholder="Email"
-          value={formData.email}
-          onChange={handleInputChange}
+          value={values.email}
+          onChange={handleChange}
           required
         />
         <span className="form-login__input-error">{inputsValidate.email}</span>
         <input
-          className="form-login__input"
+          className={`form-login__input ${inputsValidate.password ? 'form-login__input_type_error' : ''}`}
           type="password"
           name="password"
           minLength={4}
           placeholder="Пароль"
           autoComplete="on"
-          value={formData.password}
-          onChange={handleInputChange}
+          value={values.password}
+          onChange={handleChange}
           required
         />
         <span className="form-login__input-error">{inputsValidate.password}</span>

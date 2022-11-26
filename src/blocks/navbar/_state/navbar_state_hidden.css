@@ -1,6 +1,5 @@
 @media screen and (max-width: 590px) {
   .navbar_state_hidden {
-    visibility: hidden;
-    position: absolute;
+    display: none;
   }
 }

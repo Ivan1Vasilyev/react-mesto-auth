@@ -1,13 +1,9 @@
 .navbar_state_showed {
-  visibility: hidden;
-  position: absolute;
-  bottom: 100%;
+  display: none;
 }
 
 @media screen and (max-width: 590px) {
   .navbar_state_showed {
-    visibility: visible;
-    position: static;
     border-bottom: 1px solid rgba(84, 84, 84, 0.7);
     width: 100%;
     display: flex;

@@ -1,27 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
+import useForm from '../hooks/useForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
-  const [formData, setFormData] = useState({ name: '', link: '' });
   const [inputsValidate, setInputsValidate] = useState({ name: {}, link: {} });
+  const { values, setValues, handleChange } = useForm({ name: '', link: '' });
 
   useEffect(() => {
     if (isOpen) {
-      setFormData({ name: '', link: '' });
+      setValues({ name: '', link: '' });
     }
   }, [isOpen]);
 
   const getValidateData = useCallback(validateData => setInputsValidate(validateData), []);
 
-  const handleInputChange = useCallback(
-    e => {
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-    },
-    [formData]
-  );
-
-  const handleSubmit = useCallback(() => onAddPlace(formData), [formData, onAddPlace]);
+  const handleSubmit = useCallback(() => onAddPlace(values), [values, onAddPlace]);
 
   return (
     <PopupWithForm
@@ -40,8 +33,8 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         name="name"
         minLength="2"
         maxLength="30"
-        value={formData.name}
-        onChange={handleInputChange}
+        value={values.name}
+        onChange={handleChange}
         required
       />
       <span className="form__input-error">{inputsValidate.name.message}</span>
@@ -50,8 +43,8 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         type="url"
         placeholder="Ссылка на картинку"
         name="link"
-        value={formData.link}
-        onChange={handleInputChange}
+        value={values.link}
+        onChange={handleChange}
         required
       />
       <span className="form__input-error">{inputsValidate.link.message}</span>
